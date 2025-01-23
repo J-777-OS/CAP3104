@@ -2,6 +2,8 @@ let totalWater = 0;
 let dailyGoal = 2000; // Set default goal
 let history = []; // Store daily history
 
+// Testing
+
 // Log Water Function
 function logWater() {
     const waterInput = document.getElementById("water").value;
