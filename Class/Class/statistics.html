@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics - HydrateMe</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background: linear-gradient(to right, #0066cc, #0099ff);
+            padding: 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 5px 10px;
+        }
+
+        .stats-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stats-card {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .highlight {
+            color: #0066cc;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <h1>HydrateMe</h1>
+            <div class="nav-links">
+                <a href="index.html">Dashboard</a>
+                <a href="statistics.html" class="active">Statistics</a>
+                <a href="profile.html">Profile</a>
+                <a href="settings.html">Settings</a>
+                <a href="history.html">History</a>
+                <a href="HomeScreen.html">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="stats-container">
+        <div class="stats-card">
+            <h2>Weekly Progress</h2>
+            <div class="chart-container">
+                <canvas id="weeklyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <h2>Daily Patterns</h2>
+            <div class="chart-container">
+                <canvas id="dailyPatternChart"></canvas>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <h2>Achievement Stats</h2>
+            <p>Current Streak: <span id="currentStreak" class="highlight">0</span> days</p>
+            <p>Longest Streak: <span id="longestStreak" class="highlight">0</span> days</p>
+            <p>Goal Achievement Rate: <span id="achievementRate" class="highlight">0</span>%</p>
+        </div>
+
+        <div class="stats-card">
+            <h2>Average Intake</h2>
+            <p>Daily Average: <span id="dailyAverage" class="highlight">0</span> ml</p>
+            <p>Weekly Average: <span id="weeklyAverage" class="highlight">0</span> ml</p>
+            <p>Monthly Average: <span id="monthlyAverage" class="highlight">0</span> ml</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateStats() {
+            const history = JSON.parse(localStorage.getItem('waterHistory') || '[]');
+            const goal = localStorage.getItem('waterGoal') || 2000;
+            
+            // Calculate streaks and averages
+            let currentStreak = 0;
+            let longestStreak = 0;
+            let goalsMet = 0;
+            let totalDays = 0;
+            
+            const dailyTotals = {};
+            history.forEach(entry => {
+                const date = new Date(entry.timestamp).toDateString();
+                dailyTotals[date] = (dailyTotals[date] || 0) + entry.amount;
+            });
+
+            Object.values(dailyTotals).forEach(total => {
+                if (total >= goal) {
+                    currentStreak++;
+                    longestStreak = Math.max(longestStreak, currentStreak);
+                    goalsMet++;
+                } else {
+                    currentStreak = 0;
+                }
+                totalDays++;
+            });
+
+            // Update stats display
+            document.getElementById('currentStreak').textContent = currentStreak;
+            document.getElementById('longestStreak').textContent = longestStreak;
+            document.getElementById('achievementRate').textContent = 
+                totalDays ? Math.round((goalsMet / totalDays) * 100) : 0;
+
+            // Calculate averages
+            const today = new Date();
+            const weekAgo = new Date(today - 7 * 24 * 60 * 60 * 1000);
+            const monthAgo = new Date(today - 30 * 24 * 60 * 60 * 1000);
+
+            const weeklyData = history.filter(entry => new Date(entry.timestamp) > weekAgo);
+            const monthlyData = history.filter(entry => new Date(entry.timestamp) > monthAgo);
+
+            document.getElementById('dailyAverage').textContent = 
+                Math.round(Object.values(dailyTotals).reduce((a, b) => a + b, 0) / totalDays || 0);
+            document.getElementById('weeklyAverage').textContent = 
+                Math.round(weeklyData.reduce((sum, entry) => sum + entry.amount, 0) / 7);
+            document.getElementById('monthlyAverage').textContent = 
+                Math.round(monthlyData.reduce((sum, entry) => sum + entry.amount, 0) / 30);
+
+            // Create charts
+            createWeeklyChart(weeklyData);
+            createDailyPatternChart(history);
+        }
+
+        function createWeeklyChart(weeklyData) {
+            const ctx = document.getElementById('weeklyChart').getContext('2d');
+            const dailyTotals = {};
+            const labels = [];
+            const data = [];
+
+            for(let i = 6; i >= 0; i--) {
+                const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+                labels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+                dailyTotals[date.toDateString()] = 0;
+            }
+
+            weeklyData.forEach(entry => {
+                const date = new Date(entry.timestamp).toDateString();
+                dailyTotals[date] = (dailyTotals[date] || 0) + entry.amount;
+            });
+
+            Object.values(dailyTotals).forEach(total => data.push(total));
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Intake (ml)',
+                        data: data,
+                        backgroundColor: '#0099ff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function createDailyPatternChart(history) {
+            const ctx = document.getElementById('dailyPatternChart').getContext('2d');
+            const hourlyData = new Array(24).fill(0);
+            
+            history.forEach(entry => {
+                const hour = new Date(entry.timestamp).getHours();
+                hourlyData[hour] += entry.amount;
+            });
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                    datasets: [{
+                        label: 'Hourly Pattern (ml)',
+                        data: hourlyData,
+                        borderColor: '#0099ff',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        window.addEventListener('load', calculateStats);
+    </script>
+</body>
+</html>
