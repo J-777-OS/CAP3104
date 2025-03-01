@@ -6,9 +6,25 @@
     <title>Profile - HydrateMe</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Dark mode variables - should be at the root level */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+        }
+        
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+        }
+        
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s;
         }
 
         nav {
@@ -36,6 +52,8 @@
             margin: 2rem auto;
             padding: 1rem;
             text-align: center;
+            background-color: var(--card-bg);
+            border-radius: 10px;
         }
 
         .profile-picture {
@@ -79,12 +97,13 @@
 <body>
     <nav>
         <div class="nav-content">
-            <h1>HydrateMe</h1>
+            <h1>Quench</h1>
             <div class="nav-links">
-                <a href="index.html">Dashboard</a>
+                <a href="index.html" class="active">Dashboard</a>
                 <a href="statistics.html">Statistics</a>
                 <a href="milestone.html">Milestones</a>
-                <a href="profile.html" class="active">Profile</a>
+                <a href="facts.html">Fun Facts</a>
+                <a href="profile.html">Profile</a>
                 <a href="settings.html">Settings</a>
                 <a href="history.html">History</a>
                 <a href="HomeScreen.html">Logout</a>
@@ -104,6 +123,13 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply dark mode from localStorage
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+
         // Load user data
         window.addEventListener('load', () => {
             const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -137,5 +163,6 @@
             profilePic.innerHTML = `<img src="${savedPicture}" alt="Profile Picture">`;
         }
     </script>
+    
 </body>
 </html>

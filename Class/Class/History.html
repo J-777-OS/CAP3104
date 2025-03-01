@@ -6,9 +6,28 @@
     <title>History - HydrateMe</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+            --border-color: #ddd;
+            --highlight-color: #0066cc;
+        }
+        
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+            --border-color: #444;
+            --highlight-color: #4da6ff;
+        }
+        
         body {
-            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-family: Arial, sans-serif;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         nav {
@@ -38,22 +57,25 @@
         }
 
         .history-day {
-            background: #f5f5f5;
+            background: var(--card-bg);
             border-radius: 10px;
             padding: 1rem;
             margin-bottom: 1rem;
+            transition: background-color 0.3s;
         }
 
         .history-item {
             display: flex;
             justify-content: space-between;
             padding: 0.5rem;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s;
         }
 
         .day-total {
-            color: #0066cc;
+            color: var(--highlight-color);
             font-weight: bold;
+            transition: color 0.3s;
         }
     </style>
 </head>
@@ -124,6 +146,15 @@
         }
 
         window.addEventListener('load', loadHistory);
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply dark mode from localStorage
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
     </script>
 </body>
 </html>

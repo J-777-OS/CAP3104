@@ -7,6 +7,27 @@
     <!-- Same styles as above -->
 </head>
 <style>
+
+    /* Dark mode variables */
+    :root {
+        --bg-color: #ffffff;
+        --text-color: #333333;
+        --card-bg: #f5f5f5;
+    }
+
+    .dark-mode {
+        --bg-color: #1a1a1a;
+        --text-color: #ffffff;
+        --card-bg: #2d2d2d;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        transition: background-color 0.3s;
+    }
     /* Same base styles as main page */
     body { margin: 0; font-family: Arial, sans-serif; }
     nav {
@@ -97,7 +118,7 @@
         color: #0066cc;
         margin-bottom: 0.5rem;
     }
-</style>>
+</style>
 <body>
     <nav>
         <div class="nav-content">
@@ -176,5 +197,14 @@
             document.body.classList.toggle('dark-mode', darkMode);
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply dark mode from localStorage
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+
 </body>
 </html>

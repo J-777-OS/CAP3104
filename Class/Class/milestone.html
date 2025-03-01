@@ -6,12 +6,32 @@
     <title>Milestones - Quench</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Same base styles as main page */
-        body { margin: 0; font-family: Arial, sans-serif; }
+        /* Dark mode variables */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            transition: background-color 0.3s;
+        }
+        
         nav {
             background: linear-gradient(to right, #0066cc, #0099ff);
             padding: 1rem;
         }
+        
         .nav-content {
             display: flex;
             justify-content: space-between;
@@ -19,13 +39,19 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+        
         .nav-links a {
             color: white;
             text-decoration: none;
             margin-left: 20px;
             padding: 5px 10px;
         }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 1rem; }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 2rem auto; 
+            padding: 1rem; 
+        }
 
         /* Milestone specific styles */
         .milestone-grid {
@@ -33,8 +59,9 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
         }
+        
         .milestone-card {
-            background: #f5f5f5;
+            background-color: var(--card-bg);
             border-radius: 15px;
             padding: 1.5rem;
             text-align: center;
@@ -42,17 +69,21 @@
             overflow: hidden;
             transition: transform 0.3s;
         }
+        
         .milestone-card:hover {
             transform: translateY(-5px);
         }
+        
         .milestone-icon {
             font-size: 2.5rem;
             color: #0099ff;
             margin-bottom: 1rem;
         }
+        
         .milestone-locked {
             opacity: 0.5;
         }
+        
         .milestone-locked::after {
             content: '🔒';
             position: absolute;
@@ -60,12 +91,14 @@
             right: 10px;
             font-size: 1.5rem;
         }
+        
         .progress-bar {
             background: #ddd;
             height: 10px;
             border-radius: 5px;
             margin: 1rem 0;
         }
+        
         .progress-fill {
             background: #0099ff;
             height: 100%;
@@ -75,7 +108,7 @@
 
         /* Fun Facts specific styles */
         .fact-card {
-            background: #fff;
+            background-color: var(--card-bg);
             border-radius: 15px;
             padding: 2rem;
             margin-bottom: 1.5rem;
@@ -84,14 +117,17 @@
             align-items: center;
             gap: 2rem;
         }
+        
         .fact-icon {
             font-size: 3rem;
             color: #0099ff;
             flex-shrink: 0;
         }
+        
         .fact-content {
             flex-grow: 1;
         }
+        
         .fact-title {
             color: #0066cc;
             margin-bottom: 0.5rem;
@@ -103,9 +139,9 @@
         <div class="nav-content">
             <h1>Quench</h1>
             <div class="nav-links">
-                <a href="index.html" class="active">Dashboard</a>
+                <a href="index.html">Dashboard</a>
                 <a href="statistics.html">Statistics</a>
-                <a href="milestone.html">Milestones</a>
+                <a href="milestone.html" class="active">Milestones</a>
                 <a href="facts.html">Fun Facts</a>
                 <a href="profile.html">Profile</a>
                 <a href="settings.html">Settings</a>
@@ -160,5 +196,14 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply dark mode from localStorage
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
 </body>
 </html>
