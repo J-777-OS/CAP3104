@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - HydrateMe</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            transition: background-color 0.3s;
+        }
+
+        nav {
+            background: linear-gradient(to right, #0066cc, #0099ff);
+            padding: 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links a, .nav-links button {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 5px 10px;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .settings-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .toggle input {
+            margin-right: 10px;
+        }
+
+        .interval-select, .goal-input {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            width: 200px;
+        }
+
+        button {
+            background: #0099ff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <h1>HydrateMe</h1>
+            <div class="nav-links">
+                <a href="index.html" class="active">Dashboard</a>
+                <a href="statistics.html">Statistics</a>
+                <a href="milestone.html">Milestones</a>
+                <a href="facts.html">Fun Facts</a>
+                <a href="profile.html">Profile</a>
+                <a href="settings.html">Settings</a>
+                <a href="history.html">History</a>
+                <a href="HomeScreen.html">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="settings-container">
+        <div class="settings-card">
+            <h2>Daily Goal</h2>
+            <input type="number" id="dailyGoal" class="goal-input" value="2000" min="0" step="50">
+            <button onclick="updateGoal()">Update Goal</button>
+        </div>
+
+        <div class="settings-card">
+            <h2>Reminders</h2>
+            <label class="toggle">
+                <input type="checkbox" id="notificationToggle" checked>
+                Enable Notifications
+            </label>
+            <select id="reminderInterval" class="interval-select">
+                <option value="30">Every 30 minutes</option>
+                <option value="60">Every hour</option>
+                <option value="120">Every 2 hours</option>
+            </select>
+        </div>
+
+        <div class="settings-card">
+            <h2>Appearance</h2>
+            <label class="toggle">
+                <input type="checkbox" id="darkModeToggle">
+                Dark Mode
+            </label>
+        </div>
+    </div>
+
+    <script>
+        // Apply dark mode based on saved preference
+        function applyDarkMode() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            document.body.classList.toggle('dark-mode', darkMode);
+        }
+
+        // Call this function when the page loads
+        applyDarkMode();
+
+        function updateGoal() {
+            const newGoal = document.getElementById('dailyGoal').value;
+            localStorage.setItem('waterGoal', newGoal);
+            alert('Daily goal updated!');
+        }
+
+        document.getElementById('darkModeToggle').addEventListener('change', (e) => {
+            document.body.classList.toggle('dark-mode', e.target.checked);
+            localStorage.setItem('darkMode', e.target.checked);
+        });
+
+        document.getElementById('notificationToggle').addEventListener('change', (e) => {
+            document.getElementById('reminderInterval').disabled = !e.target.checked;
+            localStorage.setItem('notifications', e.target.checked);
+        });
+
+        document.getElementById('reminderInterval').addEventListener('change', (e) => {
+            localStorage.setItem('reminderInterval', e.target.value);
+        });
+
+        // Load saved settings
+        window.addEventListener('load', () => {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            const notifications = localStorage.getItem('notifications') === 'true';
+            const interval = localStorage.getItem('reminderInterval');
+            const goal = localStorage.getItem('waterGoal');
+
+            document.getElementById('darkModeToggle').checked = darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            document.getElementById('notificationToggle').checked = notifications;
+            if(interval) document.getElementById('reminderInterval').value = interval;
+            if(goal) document.getElementById('dailyGoal').value = goal;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - HydrateMe</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+            --border-color: #ddd;
+            --highlight-color: #0066cc;
+        }
+        
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+            --border-color: #444;
+            --highlight-color: #4da6ff;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav {
+            background: linear-gradient(to right, #0066cc, #0099ff);
+            padding: 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 5px 10px;
+        }
+
+        .history-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .history-day {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s;
+        }
+
+        .day-total {
+            color: var(--highlight-color);
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <h1>HydrateMe</h1>
+            <div class="nav-links">
+                <a href="index.html" class="active">Dashboard</a>
+                <a href="statistics.html">Statistics</a>
+                <a href="milestone.html">Milestones</a>
+                <a href="facts.html">Fun Facts</a>
+                <a href="profile.html">Profile</a>
+                <a href="settings.html">Settings</a>
+                <a href="history.html">History</a>
+                <a href="HomeScreen.html">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="history-container" id="historyContainer"></div>
+
+    <script>
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('waterHistory') || '[]');
+            const container = document.getElementById('historyContainer');
+            const groupedHistory = {};
+
+            history.forEach(entry => {
+                const date = new Date(entry.timestamp).toDateString();
+                if (!groupedHistory[date]) {
+                    groupedHistory[date] = {
+                        entries: [],
+                        total: 0
+                    };
+                }
+                groupedHistory[date].entries.push(entry);
+                groupedHistory[date].total += entry.amount;
+            });
+
+            Object.keys(groupedHistory)
+                .sort((a, b) => new Date(b) - new Date(a))
+                .forEach(date => {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'history-day';
+                    dayDiv.innerHTML = `
+                        <h3>${formatDate(date)}</h3>
+                        <p class="day-total">Total: ${groupedHistory[date].total}ml</p>
+                        ${groupedHistory[date].entries
+                            .map(entry => `
+                                <div class="history-item">
+                                    <span>${new Date(entry.timestamp).toLocaleTimeString()}</span>
+                                    <span>${entry.amount}ml</span>
+                                </div>
+                            `).join('')}
+                    `;
+                    container.appendChild(dayDiv);
+                });
+        }
+
+        window.addEventListener('load', loadHistory);
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply dark mode from localStorage
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>

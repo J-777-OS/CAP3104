@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydration Tracker Pro</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+         /* Dark mode variables */
+         :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            transition: background-color 0.3s;
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background: linear-gradient(to right, #0066cc, #0099ff);
+            padding: 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 5px 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .tracking-card, .stats-card, .history-card {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .water-bottle {
+            height: 300px;
+            width: 100px;
+            border: 3px solid #0099ff;
+            border-radius: 0 0 30px 30px;
+            margin: 1rem auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .water-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(180deg, #99ccff, #66b3ff);
+            transition: height 0.3s ease;
+            height: 0%;
+        }
+
+        .quick-add {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .quick-btn {
+            flex: 1;
+            background: #0099ff;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .custom-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .custom-input input {
+            flex: 1;
+            padding: 0.5rem;
+        }
+
+        .add-btn {
+            background: #0099ff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .stat-item i {
+            font-size: 1.5rem;
+            color: #0099ff;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <h1>Quench</h1>
+            <div class="nav-links">
+                <a href="index.html" class="active">Dashboard</a>
+                <a href="statistics.html">Statistics</a>
+                <a href="milestone.html">Milestones</a>
+                <a href="facts.html">Fun Facts</a>
+                <a href="profile.html">Profile</a>
+                <a href="settings.html">Settings</a>
+                <a href="history.html">History</a>
+                <a href="HomeScreen.html">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-grid">
+            <div class="tracking-card">
+                <h2>Daily Progress</h2>
+                <div class="water-bottle">
+                    <div class="water-fill" id="progress-fill"></div>
+                </div>
+                <p id="progress" class="progress-text">0 / 2000 ml</p>
+                
+                <div class="quick-add">
+                    <button class="quick-btn">
+                        <i class="fas fa-tint"></i>250ml
+                    </button>
+                    <button class="quick-btn">
+                        <i class="fas fa-tint"></i>500ml
+                    </button>
+                    <button class="quick-btn">
+                        <i class="fas fa-tint"></i>750ml
+                    </button>
+                </div>
+
+                <div class="custom-input">
+                    <input type="number" id="water" value="250" min="0" step="50">
+                    <button class="add-btn">Add Custom Amount</button>
+                </div>
+            </div>
+
+            <div class="stats-card">
+                <h2>Today's Stats</h2>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <p>Last Drink</p>
+                        <h3 id="lastDrink">2 hrs ago</h3>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-trophy"></i>
+                        <p>Goal Progress</p>
+                        <h3 id="goalProgress">0%</h3>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-fire"></i>
+                        <p>Streak</p>
+                        <h3 id="currentStreak">0 days</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-card">
+                <h2>Today's Log</h2>
+                <div id="history" class="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize state from localStorage
+            let totalWater = parseInt(localStorage.getItem('todayWater') || '0');
+            let goal = parseInt(localStorage.getItem('waterGoal')) || 2000;
+        
+            // Initialize the UI with saved data
+            updateProgress();
+            loadTodayHistory();
+            updateStreak();
+            updateLastDrink();
+        
+            // Add reset button to the UI
+            const statsCard = document.querySelector('.stats-card .stat-grid');
+            const resetButton = document.createElement('button');
+            resetButton.className = 'reset-btn';
+            resetButton.style.cssText = `
+                background: #ff4444;
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 1rem;
+                width: 100%;
+            `;
+            resetButton.innerHTML = '<i class="fas fa-redo"></i> Reset Progress';
+            statsCard.parentElement.appendChild(resetButton);
+        
+            // Add reset button event listener
+            resetButton.addEventListener('click', () => {
+                if (confirm('Are you sure you want to reset today\'s progress? This cannot be undone.')) {
+                    resetDailyProgress();
+                }
+            });
+        
+            function resetDailyProgress() {
+                totalWater = 0;
+                localStorage.setItem('todayWater', '0');
+                
+                // Clear today's entries from history
+                const history = JSON.parse(localStorage.getItem('waterHistory') || '[]');
+                const today = new Date().toDateString();
+                const filteredHistory = history.filter(entry => 
+                    new Date(entry.timestamp).toDateString() !== today
+                );
+                localStorage.setItem('waterHistory', JSON.stringify(filteredHistory));
+                
+                // Update UI
+                updateProgress();
+                loadTodayHistory();
+                updateStreak();
+                updateLastDrink();
+            }
+        
+            function updateProgress() {
+                const percentage = Math.min((totalWater / goal) * 100, 100);
+                document.getElementById('progress-fill').style.height = percentage + '%';
+                document.getElementById('progress').textContent = `${totalWater} / ${goal} ml`;
+                document.getElementById('goalProgress').textContent = `${Math.round(percentage)}%`;
+        
+                const fill = document.getElementById('progress-fill');
+                if (percentage < 33) {
+                    fill.style.background = 'linear-gradient(180deg, #ff9999, #ff6666)';
+                } else if (percentage < 66) {
+                    fill.style.background = 'linear-gradient(180deg, #99ccff, #66b3ff)';
+                } else {
+                    fill.style.background = 'linear-gradient(180deg, #99ff99, #66cc66)';
+                }
+        
+                // Save current total
+                localStorage.setItem('todayWater', totalWater.toString());
+            }
+        
+            function addWater(amount) {
+                totalWater += amount;
+                updateProgress();
+                addHistoryItem(amount);
+                updateStreak();
+                saveToHistory(amount);
+                updateLastDrink();
+            }
+        
+            function addHistoryItem(amount) {
+                const now = new Date();
+                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <span class="time">${time}</span>
+                    <span class="amount">${amount}ml</span>
+                `;
+        
+                const historyList = document.getElementById('history');
+                historyList.insertBefore(historyItem, historyList.firstChild);
+        
+                const lastDrink = document.getElementById('lastDrink');
+                if (lastDrink) lastDrink.textContent = 'Just now';
+            }
+        
+            function saveToHistory(amount) {
+                const history = JSON.parse(localStorage.getItem('waterHistory') || '[]');
+                history.push({
+                    amount: amount,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('waterHistory', JSON.stringify(history));
+            }
+        
+            function loadTodayHistory() {
+                const history = JSON.parse(localStorage.getItem('waterHistory') || '[]');
+                const today = new Date().toDateString();
+                const todayEntries = history.filter(entry => 
+                    new Date(entry.timestamp).toDateString() === today
+                );
+        
+                const historyList = document.getElementById('history');
+                historyList.innerHTML = '';
+                todayEntries.reverse().forEach(entry => {
+                    const time = new Date(entry.timestamp).toLocaleTimeString([], { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `
+                        <span class="time">${time}</span>
+                        <span class="amount">${entry.amount}ml</span>
+                    `;
+                    historyList.appendChild(historyItem);
+                });
+            }
+        
+            function updateStreak() {
+                const history = JSON.parse(localStorage.getItem('waterHistory') || '[]');
+                let streak = 0;
+                const dailyTotals = {};
+        
+                history.forEach(entry => {
+                    const date = new Date(entry.timestamp).toDateString();
+                    dailyTotals[date] = (dailyTotals[date] || 0) + entry.amount;
+                });
+        
+                let currentDate = new Date();
+                while (dailyTotals[currentDate.toDateString()] >= goal) {
+                    streak++;
+                    currentDate.setDate(currentDate.getDate() - 1);
+                }
+        
+                document.getElementById('currentStreak').textContent = `${streak} days`;
+            }
+        
+            function updateLastDrink() {
+                const history = JSON.parse(localStorage.getItem('waterHistory') || '[]');
+                const lastDrink = document.getElementById('lastDrink');
+                
+                if (history.length > 0) {
+                    const lastEntry = new Date(history[history.length - 1].timestamp);
+                    const now = new Date();
+                    const diffMinutes = Math.floor((now - lastEntry) / 60000);
+                    
+                    if (diffMinutes < 1) {
+                        lastDrink.textContent = 'Just now';
+                    } else if (diffMinutes < 60) {
+                        lastDrink.textContent = `${diffMinutes} min ago`;
+                    } else {
+                        const hours = Math.floor(diffMinutes / 60);
+                        lastDrink.textContent = `${hours} hr${hours > 1 ? 's' : ''} ago`;
+                    }
+                } else {
+                    lastDrink.textContent = 'No drinks yet';
+                }
+            }
+        
+            // Event Listeners
+            document.querySelectorAll('.quick-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const amount = parseInt(e.target.textContent.match(/\d+/)[0]);
+                    addWater(amount);
+                });
+            });
+        
+            const addBtn = document.querySelector('.add-btn');
+            if (addBtn) {
+                addBtn.addEventListener('click', () => {
+                    const input = document.getElementById('water');
+                    const amount = parseInt(input.value);
+                    if (!isNaN(amount) && amount > 0) {
+                        addWater(amount);
+                        input.value = '250';
+                    }
+                });
+            }
+        
+            const waterInput = document.getElementById('water');
+            if (waterInput) {
+                waterInput.addEventListener('input', (e) => {
+                    if (e.target.value < 0) e.target.value = 0;
+                });
+            }
+        
+            // Watch for goal changes
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'waterGoal') {
+                    goal = parseInt(e.newValue || '2000');
+                    updateProgress();
+                }
+            });
+        
+            // Handle page visibility changes
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    totalWater = parseInt(localStorage.getItem('todayWater') || '0');
+                    updateProgress();
+                    loadTodayHistory();
+                    updateStreak();
+                    updateLastDrink();
+                }
+            });
+        
+            // Check for midnight reset every minute
+            setInterval(() => {
+                const now = new Date();
+                if (now.getHours() === 0 && now.getMinutes() === 0) {
+                    localStorage.setItem('todayWater', '0');
+                    totalWater = 0;
+                    updateProgress();
+                    loadTodayHistory();
+                    updateStreak();
+                }
+            }, 60000);
+        });
+        
+        // Dark mode handling
+
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Apply dark mode from localStorage
+                if (localStorage.getItem('darkMode') === 'true') {
+                    document.body.classList.add('dark-mode');
+                }
+            });
+        </script>
+<!-- Previous head and style sections remain the same -->
