@@ -86,4 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
             intervalSelect.disabled = !e.target.checked;
         });
     }
+
+    
 });
