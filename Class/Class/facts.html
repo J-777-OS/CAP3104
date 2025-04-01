@@ -4,134 +4,186 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fun Facts - Quench</title>
-    <!-- Same styles as above -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Theme variables */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+            --border-color: #dddddd;
+            --highlight-color: #0099ff;
+            --button-color: #0099ff;
+            --button-text: #ffffff;
+        }
+        
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+            --border-color: #444444;
+            --highlight-color: #4da6ff;
+            --button-color: #0077cc;
+            --button-text: #ffffff;
+        }
+        
+        .high-contrast {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --card-bg: #000000;
+            --border-color: #ffffff;
+            --highlight-color: #ffff00;
+            --button-color: #ffffff;
+            --button-text: #000000;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav {
+            background: linear-gradient(to right, #0066cc, #0099ff);
+            padding: 1rem;
+        }
+
+        .dark-mode nav, .high-contrast nav {
+            background: #000000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 5px 10px;
+        }
+
+        .high-contrast .nav-links a {
+            color: var(--highlight-color);
+            border: 1px solid var(--highlight-color);
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: 2rem auto; 
+            padding: 1rem; 
+        }
+
+        /* Fun Facts specific styles */
+        .fact-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+        }
+        
+        .fact-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .high-contrast .fact-card {
+            border: 2px solid var(--border-color);
+            box-shadow: none;
+        }
+        
+        .fact-icon {
+            font-size: 3rem;
+            color: var(--highlight-color);
+            flex-shrink: 0;
+        }
+        
+        .fact-content {
+            flex-grow: 1;
+        }
+        
+        .fact-title {
+            color: var(--highlight-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Logout confirmation */
+        .logout-confirm {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 1rem;
+            display: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .logout-confirm p {
+            margin-top: 0;
+        }
+
+        .logout-confirm .buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .logout-confirm button {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-confirm .confirm {
+            background: #ff4444;
+            color: white;
+            border: none;
+        }
+
+        .logout-confirm .cancel {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .high-contrast .logout-confirm .confirm {
+            background: var(--highlight-color);
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+    </style>
 </head>
-<style>
-
-    /* Dark mode variables */
-    :root {
-        --bg-color: #ffffff;
-        --text-color: #333333;
-        --card-bg: #f5f5f5;
-    }
-
-    .dark-mode {
-        --bg-color: #1a1a1a;
-        --text-color: #ffffff;
-        --card-bg: #2d2d2d;
-    }
-
-    body {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        font-family: Arial, sans-serif;
-        margin: 0;
-        transition: background-color 0.3s;
-    }
-    /* Same base styles as main page */
-    body { margin: 0; font-family: Arial, sans-serif; }
-    nav {
-        background: linear-gradient(to right, #0066cc, #0099ff);
-        padding: 1rem;
-    }
-    .nav-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .nav-links a {
-        color: white;
-        text-decoration: none;
-        margin-left: 20px;
-        padding: 5px 10px;
-    }
-    .container { max-width: 1200px; margin: 2rem auto; padding: 1rem; }
-
-    /* Milestone specific styles */
-    .milestone-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-    .milestone-card {
-        background: #f5f5f5;
-        border-radius: 15px;
-        padding: 1.5rem;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s;
-    }
-    .milestone-card:hover {
-        transform: translateY(-5px);
-    }
-    .milestone-icon {
-        font-size: 2.5rem;
-        color: #0099ff;
-        margin-bottom: 1rem;
-    }
-    .milestone-locked {
-        opacity: 0.5;
-    }
-    .milestone-locked::after {
-        content: '🔒';
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.5rem;
-    }
-    .progress-bar {
-        background: #ddd;
-        height: 10px;
-        border-radius: 5px;
-        margin: 1rem 0;
-    }
-    .progress-fill {
-        background: #0099ff;
-        height: 100%;
-        border-radius: 5px;
-        transition: width 0.3s;
-    }
-
-    /* Fun Facts specific styles */
-    .fact-card {
-        background: #fff;
-        border-radius: 15px;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-    }
-    .fact-icon {
-        font-size: 3rem;
-        color: #0099ff;
-        flex-shrink: 0;
-    }
-    .fact-content {
-        flex-grow: 1;
-    }
-    .fact-title {
-        color: #0066cc;
-        margin-bottom: 0.5rem;
-    }
-</style>
 <body>
     <nav>
         <div class="nav-content">
             <h1>Quench</h1>
             <div class="nav-links">
-                <a href="index.html" class="active">Dashboard</a>
+                <a href="index.html">Dashboard</a>
                 <a href="statistics.html">Statistics</a>
                 <a href="milestone.html">Milestones</a>
-                <a href="facts.html">Fun Facts</a>
+                <a href="facts.html" class="active">Fun Facts</a>
                 <a href="profile.html">Profile</a>
                 <a href="settings.html">Settings</a>
                 <a href="history.html">History</a>
-                <a href="HomeScreen.html">Logout</a>
+                <a href="#" id="logout-btn">Logout</a>
             </div>
         </div>
     </nav>
@@ -170,41 +222,60 @@
                 <p>Feeling tired? Before reaching for coffee, try water! Fatigue is often one of the first signs of dehydration. Water helps your heart pump blood more efficiently.</p>
             </div>
         </div>
+
+        <div class="fact-card">
+            <div class="fact-icon">💦</div>
+            <div class="fact-content">
+                <h3 class="fact-title">Digestion Helper</h3>
+                <p>Water is essential for proper digestion. It helps dissolve nutrients, making them accessible to your body, and helps prevent constipation by keeping your digestive system moving smoothly.</p>
+            </div>
+        </div>
+
+        <div class="fact-card">
+            <div class="fact-icon">✨</div>
+            <div class="fact-content">
+                <h3 class="fact-title">Beauty Secret</h3>
+                <p>Water is nature's best beauty treatment! Proper hydration helps maintain skin elasticity, reduces the appearance of fine lines, and gives your skin a healthy glow.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout confirmation -->
+    <div class="logout-confirm" id="logout-confirm">
+        <p>Are you sure you want to logout?</p>
+        <div class="buttons">
+            <button class="cancel" id="cancel-logout">Cancel</button>
+            <button class="confirm" id="confirm-logout">Logout</button>
+        </div>
     </div>
 
     <script>
-        // Load milestone progress
-        document.addEventListener('DOMContentLoaded', () => {
-            const history = JSON.parse(localStorage.getItem('waterHistory') || '[]');
-            const goal = parseInt(localStorage.getItem('waterGoal')) || 2000;
-
-            // Update milestone progress based on history
-            if (history.length > 0) {
-                // Calculate streaks and update progress bars
-                updateMilestoneProgress(history, goal);
-            }
+        // Logout confirmation
+        document.getElementById('logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('logout-confirm').style.display = 'block';
+        });
+        
+        document.getElementById('cancel-logout').addEventListener('click', () => {
+            document.getElementById('logout-confirm').style.display = 'none';
+        });
+        
+        document.getElementById('confirm-logout').addEventListener('click', () => {
+            window.location.href = 'HomeScreen.html';
         });
 
-        function updateMilestoneProgress(history, goal) {
-            // Implementation of milestone progress calculation
-            // This would update the progress bars and unlock achievements
-        }
-    </script>
-    <script>
-        // Load dark mode setting
-        window.addEventListener('load', () => {
-            const darkMode = localStorage.getItem('darkMode') === 'true';
-            document.body.classList.toggle('dark-mode', darkMode);
-        });
-    </script>
-    <script>
+        // Apply theme settings
         document.addEventListener('DOMContentLoaded', function() {
-            // Apply dark mode from localStorage
-            if (localStorage.getItem('darkMode') === 'true') {
+            // Apply dark mode or high contrast mode from localStorage
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            const highContrast = localStorage.getItem('highContrast') === 'true';
+            
+            if (highContrast) {
+                document.body.classList.add('high-contrast');
+            } else if (darkMode) {
                 document.body.classList.add('dark-mode');
             }
         });
     </script>
-
 </body>
 </html>
